@@ -4,7 +4,7 @@ import { useState, Suspense } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { ShieldCheck, Loader2, ArrowLeft } from 'lucide-react'
+import { ShieldCheck, Loader2, ArrowLeft, Eye, EyeOff } from 'lucide-react'
 
 function LoginForm() {
   const { login } = useAuth()
@@ -14,6 +14,8 @@ function LoginForm() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  // State for toggling password visibility
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -106,17 +108,26 @@ function LoginForm() {
               <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-zinc-400">
                 Password
               </label>
-              <div className="mt-2">
+              {/* Relative wrapper added for positioning toggle button */}
+              <div className="mt-2 relative">
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full rounded-2xl bg-black border border-white/10 px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-hidden focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-all"
+                  className="block w-full rounded-2xl bg-black border border-white/10 pl-4 pr-12 py-3 text-sm text-white placeholder-zinc-500 focus:outline-hidden focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-all"
                   placeholder="••••••••"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors"
+                  aria-label="Toggle password visibility"
+                >
+                  {showPassword ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
+                </button>
               </div>
             </div>
 
