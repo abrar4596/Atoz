@@ -1,7 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { Store, Truck, ShoppingBag, Check } from 'lucide-react'
+import { Store, Truck, ShoppingBag, Check, LogIn, Loader2 } from 'lucide-react'
+import { useCart } from '@/context/CartContext'
+import { useAuth } from '@/context/AuthContext'
+import { useRouter, usePathname } from 'next/navigation'
 
 export interface Product {
   _id: string
@@ -38,8 +41,24 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
     flavourTags && flavourTags.length > 0 ? flavourTags[0] : ''
   )
   const [isAdded, setIsAdded] = useState(false)
+  const { addToCart } = useCart()
+  const { user, loading } = useAuth()
+  const router = useRouter()
+  const pathname = usePathname()
 
   const handleAddToCart = () => {
+    // Check if user is authenticated
+    if (loading) {
+      return
+    }
+    if (!user) {
+      // Redirect to login with current path as redirect URL
+      router.push(`/login?redirect=${encodeURIComponent(pathname)}`)
+      return
+    }
+
+    // Proceed with adding to cart if authenticated
+    addToCart(product, selectedFlavour)
     if (onAddToCart) {
       onAddToCart(product, selectedFlavour)
     }
@@ -56,7 +75,7 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
         <div className="absolute top-3 left-3 z-10">
           {stock > 0 ? (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 border border-emerald-200/50 shadow-sm dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900/30">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-505 bg-emerald-500 animate-pulse" />
               <Store className="h-3 w-3" />
               Pickup Today
             </span>
@@ -74,12 +93,10 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
           alt={name}
           className="h-4/5 w-4/5 object-contain mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 group-hover:scale-105"
           onError={(e) => {
-            // Fallback image if source fails
             e.currentTarget.src = 'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=300&auto=format&fit=crop'
           }}
         />
 
-        {/* Quick details highlight overlay on hover */}
         <div className="absolute inset-0 bg-black/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       </div>
 
@@ -136,17 +153,31 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
         <div className="mt-auto pt-2">
           <button
             onClick={handleAddToCart}
-            disabled={isAdded}
+            disabled={isAdded || loading}
             className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 cursor-pointer ${
               isAdded
                 ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20'
-                : 'bg-zinc-950 hover:bg-zinc-800 text-white dark:bg-zinc-50 dark:hover:bg-zinc-200 dark:text-zinc-950 shadow-md shadow-zinc-950/10 dark:shadow-none'
+                : loading
+                  ? 'bg-zinc-700 text-zinc-400 cursor-not-allowed'
+                  : !user
+                    ? 'bg-indigo-600 hover:bg-indigo-500 text-white'
+                    : 'bg-zinc-950 hover:bg-zinc-800 text-white dark:bg-zinc-50 dark:hover:bg-zinc-200 dark:text-zinc-950 shadow-md shadow-zinc-950/10 dark:shadow-none'
             }`}
           >
-            {isAdded ? (
+            {loading ? (
               <>
-                <Check className="h-4 w-4 animate-scale" />
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Loading...
+              </>
+            ) : isAdded ? (
+              <>
+                <Check className="h-4 w-4" />
                 Added to Cart
+              </>
+            ) : !user ? (
+              <>
+                <LogIn className="h-4 w-4" />
+                Sign In to Add
               </>
             ) : (
               <>

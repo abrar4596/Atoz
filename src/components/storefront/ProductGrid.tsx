@@ -3,38 +3,27 @@
 import { useState, useEffect } from 'react'
 import { Search, Filter, AlertCircle, RefreshCw, SlidersHorizontal, Package, Check, Store } from 'lucide-react'
 import ProductCard, { Product } from './ProductCard'
+import { fetchProducts as fetchProductsApi } from '@/services/productApi'
 
 export default function ProductGrid() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   
-  // Search & Filter State
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [localPickupOnly, setLocalPickupOnly] = useState(false)
   const [sortBy, setSortBy] = useState<'featured' | 'price-low' | 'price-high'>('featured')
 
-  // Categories based on PRD enum
   const categories = ['All', 'Protein', 'Pre-workout', 'Vitamins', 'Accessories']
 
   const fetchProducts = async () => {
     setLoading(true)
     setError(null)
     try {
-      // Fetching from relative path as specified.
-      const response = await fetch('http://localhost:5000/api/products')
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`)
-      }
-      
-      const result = await response.json()
-      
+      const result = await fetchProductsApi()
       if (result.success && Array.isArray(result.data)) {
         setProducts(result.data)
-      } else if (Array.isArray(result)) {
-        setProducts(result)
       } else {
         throw new Error('Unexpected data format returned from server.')
       }
@@ -50,39 +39,32 @@ export default function ProductGrid() {
     fetchProducts()
   }, [])
 
-  // Filter & Sort Logic
   const filteredProducts = products
     .filter((product) => {
-      // 1. Search Query Match
       const matchesSearch =
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (product.description && product.description.toLowerCase().includes(searchQuery.toLowerCase()))
 
-      // 2. Category Match
       const matchesCategory =
         selectedCategory === 'All' ||
         product.category?.toLowerCase() === selectedCategory.toLowerCase()
 
-      // 3. Local Pickup Stock Match
       const stock = product.inventory?.totalStock ?? 0
       const matchesPickup = !localPickupOnly || stock > 0
 
       return matchesSearch && matchesCategory && matchesPickup
     })
     .sort((a, b) => {
-      // Sorting
       if (sortBy === 'price-low') {
         return a.price - b.price
       }
       if (sortBy === 'price-high') {
         return b.price - a.price
       }
-      // Default / Featured: By database order or ID
       return 0
     })
 
-  // Sample data fallback for demonstration/visual validation if the API returns empty or fails
   const loadMockData = () => {
     const mockProducts: Product[] = [
       {
@@ -168,7 +150,6 @@ export default function ProductGrid() {
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       
-      {/* Top Banner / Header */}
       <div className="mb-10 text-center md:text-left md:flex md:items-center md:justify-between border-b border-zinc-100 dark:border-zinc-800 pb-6">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-zinc-950 dark:text-zinc-50 flex items-center justify-center md:justify-start gap-2">
@@ -179,7 +160,6 @@ export default function ProductGrid() {
           </p>
         </div>
         
-        {/* Quick Connection Stats */}
         <div className="mt-4 md:mt-0 flex justify-center items-center gap-3">
           {error && (
             <button 
@@ -200,12 +180,9 @@ export default function ProductGrid() {
         </div>
       </div>
 
-      {/* Control Panel (Search, Filters, Sort) */}
       <div className="mb-8 flex flex-col gap-4 bg-white dark:bg-zinc-950/40 p-4 sm:p-5 rounded-2xl border border-zinc-100 dark:border-zinc-800/80 shadow-xs">
         
-        {/* Search & Toggle Row */}
         <div className="flex flex-col md:flex-row gap-4 justify-between">
-          {/* Search Box */}
           <div className="relative flex-1">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 dark:text-zinc-500" />
             <input
@@ -217,14 +194,12 @@ export default function ProductGrid() {
             />
           </div>
 
-          {/* Filters & Toggles */}
           <div className="flex flex-wrap items-center gap-3">
-            {/* Store Pickup Only Switch */}
             <button
               onClick={() => setLocalPickupOnly(!localPickupOnly)}
               className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                 localPickupOnly
-                  ? 'border-emerald-600 bg-emerald-50 text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-950/20 dark:text-emerald-400'
+                  ? 'border-emerald-600 bg-emerald-50 text-emerald-700 dark:border-emerald-505 dark:border-emerald-500/30 dark:bg-emerald-950/20 dark:text-emerald-400'
                   : 'border-zinc-200 hover:border-zinc-300 text-zinc-600 dark:border-zinc-800 dark:hover:border-zinc-700 dark:text-zinc-400'
               }`}
             >
@@ -233,7 +208,6 @@ export default function ProductGrid() {
               {localPickupOnly && <Check className="h-3 w-3 ml-0.5" />}
             </button>
 
-            {/* Sort Selector */}
             <div className="flex items-center gap-2 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-2 bg-zinc-50/50 dark:bg-zinc-900/50">
               <SlidersHorizontal className="h-3.5 w-3.5 text-zinc-400 dark:text-zinc-500" />
               <select
@@ -249,7 +223,6 @@ export default function ProductGrid() {
           </div>
         </div>
 
-        {/* Category Tabs */}
         <div className="flex items-center gap-2 border-t border-zinc-100 dark:border-zinc-800/80 pt-4 overflow-x-auto no-scrollbar">
           <span className="text-[10px] sm:text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wide mr-2 whitespace-nowrap">
             Categories:
@@ -273,7 +246,6 @@ export default function ProductGrid() {
 
       </div>
 
-      {/* Loading Skeleton Grid */}
       {loading && (
         <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6">
           {[...Array(8)].map((_, i) => (
@@ -288,7 +260,6 @@ export default function ProductGrid() {
         </div>
       )}
 
-      {/* Error State */}
       {!loading && error && (
         <div className="flex flex-col items-center justify-center p-12 rounded-3xl border border-dashed border-red-200 bg-red-50/20 dark:border-red-900/30 dark:bg-red-950/10 max-w-xl mx-auto my-8">
           <AlertCircle className="h-10 w-10 text-red-500 mb-3" />
@@ -316,10 +287,9 @@ export default function ProductGrid() {
         </div>
       )}
 
-      {/* Empty State */}
       {!loading && !error && filteredProducts.length === 0 && (
         <div className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="h-12 w-12 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800 flex items-center justify-center text-zinc-450 dark:text-zinc-500 mb-4 shadow-xs">
+          <div className="h-12 w-12 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/60 dark:border-zinc-800 flex items-center justify-center text-zinc-400 dark:text-zinc-500 mb-4 shadow-xs">
             <Package className="h-6 w-6" />
           </div>
           <h3 className="text-base font-bold text-zinc-950 dark:text-zinc-50 mb-1">
@@ -334,17 +304,15 @@ export default function ProductGrid() {
               setSelectedCategory('All')
               setLocalPickupOnly(false)
             }}
-            className="px-4 py-2 border border-zinc-250 dark:border-zinc-750 text-xs font-semibold text-zinc-800 dark:text-zinc-200 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-900 cursor-pointer"
+            className="px-4 py-2 border border-zinc-200 dark:border-zinc-800 text-xs font-semibold text-zinc-800 dark:text-zinc-200 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-900 cursor-pointer"
           >
             Clear All Filters
           </button>
         </div>
       )}
 
-      {/* Product Grid */}
       {!loading && !error && filteredProducts.length > 0 && (
         <div>
-          {/* Results Summary Info */}
           <div className="flex items-center justify-between mb-6 text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 font-medium px-1">
             <span>
               Showing {filteredProducts.length} of {products.length} products
