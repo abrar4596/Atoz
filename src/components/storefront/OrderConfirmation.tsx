@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { CheckCircle2, Truck, Store, Clock, ShoppingBag, ArrowRight, ShieldCheck, Loader2 } from 'lucide-react'
+import { formatCurrency } from '@/lib/utils'
 
 export interface OrderDetails {
   orderId: string
@@ -105,7 +106,7 @@ export default function OrderConfirmation({ order: propOrder, onContinue }: Orde
     financials: {
       subtotal: 0,
       tax: 0,
-      deliveryFee: queryFulfillment === 'delivery' ? 4.99 : 0,
+      deliveryFee: queryFulfillment === 'delivery' ? 499 : 0,
       total: 0
     }
   } as OrderDetails : null)
@@ -217,7 +218,7 @@ export default function OrderConfirmation({ order: propOrder, onContinue }: Orde
                   </div>
                   <div className="text-right shrink-0">
                     <p className="font-bold text-zinc-300 tabular-nums">
-                      ${(item.price * item.quantity).toFixed(2)}
+                      {formatCurrency(item.price * item.quantity)}
                     </p>
                     <p className="text-[10px] text-zinc-550">Qty: {item.quantity}</p>
                   </div>
@@ -228,21 +229,21 @@ export default function OrderConfirmation({ order: propOrder, onContinue }: Orde
             <div className="p-5 border-t border-white/5 bg-zinc-900/30 space-y-2.5 text-xs font-semibold text-zinc-400">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span className="text-white tabular-nums">${financials.subtotal.toFixed(2)}</span>
+                <span className="text-white tabular-nums">{formatCurrency(financials.subtotal)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Sales Tax (8%)</span>
-                <span className="text-white tabular-nums">${financials.tax.toFixed(2)}</span>
+                <span className="text-white tabular-nums">{formatCurrency(financials.tax)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Fulfillment Fee</span>
                 <span className="text-white tabular-nums">
-                  {financials.deliveryFee > 0 ? `$${financials.deliveryFee.toFixed(2)}` : 'FREE'}
+                  {financials.deliveryFee > 0 ? formatCurrency(financials.deliveryFee) : 'FREE'}
                 </span>
               </div>
               <div className="flex justify-between border-t border-white/5 pt-3.5 text-sm font-bold text-white">
                 <span>Total Paid</span>
-                <span className="text-indigo-400 tabular-nums">${financials.total.toFixed(2)}</span>
+                <span className="text-indigo-400 tabular-nums">{formatCurrency(financials.total)}</span>
               </div>
             </div>
           </div>

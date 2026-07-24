@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react'
 import { ArrowRight, AlertTriangle, DollarSign, PackageCheck, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { fetchStats } from '@/services/adminApi'
+import { formatCurrency } from '@/lib/utils'
 
 // Mock data fallback for when backend is down
 const MOCK_STATS = {
-  cashSaved: 12500,
+  cashSaved: 1250000,
   criticalActionRequired: 8,
   flaggedItems: [
     { _id: '1', productId: { name: 'Organic Milk' }, stockQuantity: 2, batchNumber: 'BATCH-001' },
@@ -88,7 +89,7 @@ export default function AdminPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-zinc-500">Cash Saved (30 Days)</p>
-              <p className="mt-2 text-4xl font-semibold text-zinc-950">${stats.cashSaved.toLocaleString()}</p>
+              <p className="mt-2 text-4xl font-semibold text-zinc-950">{formatCurrency(stats.cashSaved)}</p>
             </div>
             <div className="rounded-2xl bg-emerald-100 p-3 text-emerald-700">
               <DollarSign className="h-6 w-6" />

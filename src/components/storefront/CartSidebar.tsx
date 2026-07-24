@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, Trash2, Plus, Minus, Store, Truck, ShoppingBag, ArrowRight, LogIn, Loader2 } from 'lucide-react'
 import { useCart } from '@/context/CartContext'
 import { useAuth } from '@/context/AuthContext'
+import { formatCurrency } from '@/lib/utils'
 
 export default function CartSidebar() {
   const {
@@ -160,7 +161,7 @@ export default function CartSidebar() {
                           </button>
                         </div>
                         <div className="text-sm font-bold text-white tabular-nums">
-                          ${(product.price * quantity).toFixed(2)}
+                          {formatCurrency(product.price * quantity)}
                         </div>
                       </div>
 
@@ -214,15 +215,15 @@ export default function CartSidebar() {
                 <div className="space-y-2 text-xs text-zinc-400 font-semibold">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span className="text-white tabular-nums">${subtotal.toFixed(2)}</span>
+                    <span className="text-white tabular-nums">{formatCurrency(subtotal)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Estimated Sales Tax (8%)</span>
-                    <span className="text-white tabular-nums">${estimatedTax.toFixed(2)}</span>
+                    <span className="text-white tabular-nums">{formatCurrency(estimatedTax)}</span>
                   </div>
                   <div className="flex justify-between border-t border-white/5 pt-2 text-sm font-bold">
                     <span className="text-white">Total Order Value</span>
-                    <span className="text-indigo-400 tabular-nums">${total.toFixed(2)}</span>
+                    <span className="text-indigo-400 tabular-nums">{formatCurrency(total)}</span>
                   </div>
                 </div>
 

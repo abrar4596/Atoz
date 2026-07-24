@@ -5,6 +5,7 @@ import { Store, Truck, ShoppingBag, Check, LogIn, Loader2 } from 'lucide-react'
 import { useCart } from '@/context/CartContext'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter, usePathname } from 'next/navigation'
+import { formatCurrency } from '@/lib/utils'
 
 export interface Product {
   _id: string
@@ -115,7 +116,7 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
         {/* Price & Stock info */}
         <div className="flex items-baseline justify-between mb-4">
           <div className="text-lg sm:text-xl font-bold text-zinc-950 dark:text-zinc-50">
-            ${price.toFixed(2)}
+            {formatCurrency(price)}
           </div>
           {stock > 0 && (
             <span className="text-[10px] sm:text-xs text-zinc-500 dark:text-zinc-400">

@@ -10,6 +10,7 @@ import { Truck, Store, CreditCard, ShieldCheck, ShoppingBag, Loader2, ArrowLeft,
 import { useCart } from '@/context/CartContext'
 import { useAuth } from '@/context/AuthContext'
 import { submitCheckout } from '@/services/orderApi'
+import { formatCurrency } from '@/lib/utils'
 
 const checkoutSchema = z.object({
   fulfillmentMethod: z.enum(['delivery', 'pickup']),
@@ -92,7 +93,7 @@ export default function CheckoutForm() {
 
   const fulfillmentMethod = watch('fulfillmentMethod')
 
-  const deliveryFee = fulfillmentMethod === 'delivery' ? 4.99 : 0
+  const deliveryFee = fulfillmentMethod === 'delivery' ? 499 : 0
   const grandTotal = subtotal + estimatedTax + deliveryFee
 
   const handleFulfillmentChange = (method: 'delivery' | 'pickup') => {
@@ -348,7 +349,7 @@ export default function CheckoutForm() {
                         </p>
                       </div>
                       <span className="font-bold text-zinc-355 tabular-nums">
-                        ${(item.product.price * item.quantity).toFixed(2)}
+                        {formatCurrency(item.product.price * item.quantity)}
                       </span>
                     </div>
                   ))}
@@ -357,22 +358,22 @@ export default function CheckoutForm() {
                 <div className="border-t border-white/5 pt-4 space-y-2 text-xs font-semibold text-zinc-400">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span className="text-white tabular-nums">${subtotal.toFixed(2)}</span>
+                    <span className="text-white tabular-nums">{formatCurrency(subtotal)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Estimated Sales Tax (8%)</span>
-                    <span className="text-white tabular-nums">${estimatedTax.toFixed(2)}</span>
+                    <span className="text-white tabular-nums">{formatCurrency(estimatedTax)}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span>Fulfillment ({fulfillmentMethod === 'delivery' ? 'Local Delivery' : 'In-Store Pickup'})</span>
                     <span className="text-white tabular-nums">
-                      {fulfillmentMethod === 'delivery' ? `$${deliveryFee.toFixed(2)}` : 'FREE'}
+                      {fulfillmentMethod === 'delivery' ? formatCurrency(deliveryFee) : 'FREE'}
                     </span>
                   </div>
                   
                   <div className="flex justify-between border-t border-white/5 pt-4 text-base font-bold text-white">
                     <span>Grand Total</span>
-                    <span className="text-indigo-400 tabular-nums">${grandTotal.toFixed(2)}</span>
+                    <span className="text-indigo-400 tabular-nums">{formatCurrency(grandTotal)}</span>
                   </div>
                 </div>
 

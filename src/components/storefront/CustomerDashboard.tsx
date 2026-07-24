@@ -9,6 +9,7 @@ import { useCart } from '@/context/CartContext'
 import { Product } from './ProductCard'
 import { fetchHistory } from '@/services/orderApi'
 import { apiClient } from '@/services/apiClient'
+import { formatCurrency } from '@/lib/utils'
 
 interface IUserProfile {
   _id: string
@@ -292,7 +293,7 @@ export default function CustomerDashboard() {
                               </span>
                             </div>
                             <div className="text-right shrink-0">
-                              <span className="text-zinc-300 font-bold">${item.price.toFixed(2)}</span>
+                              <span className="text-zinc-300 font-bold">{formatCurrency(item.price)}</span>
                               <p className="text-[9px] text-zinc-550">Qty: {item.quantity}</p>
                             </div>
                           </div>
@@ -301,7 +302,7 @@ export default function CustomerDashboard() {
 
                       <div className="border-t border-white/5 pt-3.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div className="text-xs font-bold text-zinc-400">
-                          Total Amount Paid: <span className="text-indigo-400 text-sm font-black">${order.totalAmount.toFixed(2)}</span>
+                          Total Amount Paid: <span className="text-indigo-400 text-sm font-black">{formatCurrency(order.totalAmount)}</span>
                         </div>
                         
                         <button

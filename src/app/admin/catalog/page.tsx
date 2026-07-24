@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { apiClient } from '@/services/apiClient'
 import { fetchProducts } from '@/services/productApi'
+import { formatCurrency } from '@/lib/utils'
 
 interface ProductInventory {
   totalStock: number
@@ -293,7 +294,7 @@ export default function CatalogPage() {
                           )}
                         </div>
                       </td>
-                      <td className="px-5 py-4 font-semibold text-zinc-900">${product.price.toFixed(2)}</td>
+                      <td className="px-5 py-4 font-semibold text-zinc-900">{formatCurrency(product.price)}</td>
                       <td className="px-5 py-4 text-right">
                         <button
                           type="button"
