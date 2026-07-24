@@ -13,7 +13,8 @@ export interface Product {
   description: string
   price: number
   brand: string
-  imageUrl: string
+  imageUrl?: string
+  imageUrls?: string[]
   category: string
   flavourTags: string[]
   distributorId?: string | Distributor

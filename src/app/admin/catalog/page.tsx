@@ -32,7 +32,8 @@ interface Product {
   brand: string
   price: number
   category: string
-  imageUrl: string
+  imageUrl?: string
+  imageUrls?: string[]
   inventory?: ProductInventory
 }
 
@@ -257,7 +258,7 @@ export default function CatalogPage() {
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-4">
                           <img
-                            src={product.imageUrl}
+                            src={product.imageUrls?.[0] || product.imageUrl}
                             alt={product.name}
                             className="h-12 w-12 rounded-xl object-cover border border-zinc-200 bg-zinc-50 flex-shrink-0"
                             onError={e => {

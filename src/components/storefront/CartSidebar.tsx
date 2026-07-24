@@ -115,7 +115,7 @@ export default function CartSidebar() {
                       <div className="flex items-start gap-3">
                         <div className="w-16 h-16 rounded-xl bg-zinc-900 border border-white/5 p-2 flex items-center justify-center shrink-0">
                           <img
-                            src={product.imageUrl}
+                            src={product.imageUrls?.[0] || product.imageUrl}
                             alt={product.name}
                             className="object-contain max-w-full max-h-full"
                           />

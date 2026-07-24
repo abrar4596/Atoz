@@ -21,7 +21,8 @@ interface ProductFormProps {
       description: string
       price: number
       brand: string
-      imageUrl: string
+      imageUrl?: string
+      imageUrls?: string[]
       category: string
       flavourTags: string[]
       distributorId: string
@@ -53,7 +54,8 @@ export default function ProductForm({
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
   const [brand, setBrand] = useState('')
-  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [existingImages, setExistingImages] = useState<string[]>([])
   const [category, setCategory] = useState('Protein')
   const [flavourTags, setFlavourTags] = useState('')
   const [distributorId, setDistributorId] = useState('')
@@ -97,6 +99,15 @@ export default function ProductForm({
       setFlavourTags(initialData.product.flavourTags?.join(', ') || '')
       setDistributorId(initialData.product.distributorId || '')
 
+      // Handle multi-image initialization
+      if (initialData.product.imageUrls && initialData.product.imageUrls.length > 0) {
+        setExistingImages(initialData.product.imageUrls)
+      } else if (initialData.product.imageUrl) {
+        setExistingImages([initialData.product.imageUrl])
+      } else {
+        setExistingImages([])
+      }
+
       if (initialData.inventory) {
         setBatchNumber(initialData.inventory.batchNumber || '')
         setStockQuantity(String(initialData.inventory.stockQuantity ?? '0'))
@@ -120,6 +131,28 @@ export default function ProductForm({
     }
   }, [distributors, initialData])
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files)
+      const totalCount = existingImages.length + selectedFiles.length + newFiles.length
+      if (totalCount > 5) {
+        setError('A product can have a maximum of 5 images. Selection blocked.')
+        e.target.value = ''
+        return
+      }
+      setSelectedFiles(prev => [...prev, ...newFiles])
+      e.target.value = ''
+    }
+  }
+
+  const removeExistingImage = (indexToRemove: number) => {
+    setExistingImages(prev => prev.filter((_, idx) => idx !== indexToRemove))
+  }
+
+  const removeSelectedFile = (indexToRemove: number) => {
+    setSelectedFiles(prev => prev.filter((_, idx) => idx !== indexToRemove))
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
@@ -130,7 +163,11 @@ export default function ProductForm({
     if (!description.trim()) return setError('Product description is required')
     if (!price || isNaN(Number(price)) || Number(price) < 0) return setError('Valid price (>= 0) is required')
     if (!brand.trim()) return setError('Brand name is required')
-    if (!initialData && !imageFile) return setError('Product image file is required')
+    
+    const totalImagesCount = existingImages.length + selectedFiles.length
+    if (totalImagesCount === 0) return setError('At least one product image is required')
+    if (totalImagesCount > 5) return setError('A product can have a maximum of 5 images')
+    
     if (!category) return setError('Category is required')
     if (!distributorId) return setError('Distributor is required')
     if (!batchNumber.trim()) return setError('Batch number is required')
@@ -144,9 +181,17 @@ export default function ProductForm({
       formData.append('description', description.trim())
       formData.append('price', price)
       formData.append('brand', brand.trim())
-      if (imageFile) {
-        formData.append('image', imageFile)
-      }
+      
+      // Append existing images
+      existingImages.forEach(img => {
+        formData.append('existingImages', img)
+      })
+
+      // Append new files
+      selectedFiles.forEach(file => {
+        formData.append('images', file)
+      })
+
       formData.append('category', category)
       formData.append('flavourTags', flavourTags)
       formData.append('distributorId', distributorId)
@@ -262,28 +307,57 @@ export default function ProductForm({
 
             <div>
               <label className="block text-sm font-semibold text-zinc-700 mb-1">
-                {initialData ? 'Product Image (Leave blank to keep current)' : 'Product Image *'}
+                Product Gallery (Max 5 images) *
               </label>
               <input
                 type="file"
+                multiple
                 accept="image/*"
-                onChange={e => {
-                  if (e.target.files && e.target.files.length > 0) {
-                    setImageFile(e.target.files[0])
-                  }
-                }}
-                className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm focus:border-amber-500 focus:bg-white focus:outline-none transition text-zinc-900"
-                required={!initialData}
+                onChange={handleFileChange}
+                className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm focus:border-amber-500 focus:bg-white focus:outline-none transition text-zinc-900 file:mr-4 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-zinc-900 file:text-white file:hover:bg-zinc-800 cursor-pointer"
                 disabled={submitting}
               />
-              {initialData?.product?.imageUrl && (
-                <div className="mt-2 flex items-center gap-3">
-                  <span className="text-xs text-zinc-500 font-medium">Current Image:</span>
-                  <img
-                    src={initialData.product.imageUrl}
-                    alt="Current"
-                    className="h-10 w-10 object-cover rounded-lg border border-zinc-200 bg-zinc-50"
-                  />
+              <p className="mt-1 text-xs text-zinc-400">
+                Select multiple files at once. Total images (existing + new) must not exceed 5.
+              </p>
+
+              {/* Previews Grid */}
+              {(existingImages.length > 0 || selectedFiles.length > 0) && (
+                <div className="mt-4 grid grid-cols-2 sm:grid-cols-5 gap-3">
+                  {/* Existing Images */}
+                  {existingImages.map((url, idx) => (
+                    <div key={`exist-${idx}`} className="relative aspect-square rounded-2xl overflow-hidden border border-zinc-200 bg-zinc-50 group">
+                      <img
+                        src={url}
+                        alt={`Existing ${idx + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button
+                          type="button"
+                          onClick={() => removeExistingImage(idx)}
+                          className="bg-rose-600 hover:bg-rose-500 text-white rounded-full p-1.5 shadow transition cursor-pointer"
+                          title="Remove image"
+                        >
+                          <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                      <span className="absolute bottom-2 left-2 bg-zinc-900/80 text-white text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider">
+                        Saved
+                      </span>
+                    </div>
+                  ))}
+
+                  {/* Selected Files */}
+                  {selectedFiles.map((file, idx) => (
+                    <FilePreview
+                      key={`new-${idx}`}
+                      file={file}
+                      onRemove={() => removeSelectedFile(idx)}
+                    />
+                  ))}
                 </div>
               )}
             </div>
@@ -406,5 +480,44 @@ export default function ProductForm({
         </div>
       </div>
     </form>
+  )
+}
+
+function FilePreview({ file, onRemove }: { file: File; onRemove: () => void }) {
+  const [preview, setPreview] = useState<string>('')
+
+  useEffect(() => {
+    const objectUrl = URL.createObjectURL(file)
+    setPreview(objectUrl)
+    return () => {
+      URL.revokeObjectURL(objectUrl)
+    }
+  }, [file])
+
+  if (!preview) return null
+
+  return (
+    <div className="relative aspect-square rounded-2xl overflow-hidden border border-zinc-200 bg-zinc-50 group">
+      <img
+        src={preview}
+        alt={file.name}
+        className="w-full h-full object-cover"
+      />
+      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+        <button
+          type="button"
+          onClick={onRemove}
+          className="bg-rose-600 hover:bg-rose-500 text-white rounded-full p-1.5 shadow transition cursor-pointer"
+          title="Remove file"
+        >
+          <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <span className="absolute bottom-2 left-2 bg-indigo-600 text-white text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider">
+        New
+      </span>
+    </div>
   )
 }

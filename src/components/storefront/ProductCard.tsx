@@ -14,7 +14,8 @@ export interface Product {
   description: string
   price: number
   brand: string
-  imageUrl: string
+  imageUrl?: string
+  imageUrls?: string[]
   category: string
   flavourTags: string[]
   inventory: {
@@ -35,7 +36,8 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, onAddToCart }: ProductCardProps) {
-  const { name, brand, price, imageUrl, flavourTags, inventory } = product
+  const { name, brand, price, flavourTags, inventory } = product
+  const imageUrl = product.imageUrls?.[0] || product.imageUrl || ''
   const stock = inventory?.totalStock ?? 0
 
   const [selectedFlavour, setSelectedFlavour] = useState(
