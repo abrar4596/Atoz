@@ -257,20 +257,23 @@ export default function CatalogPage() {
                   return (
                     <tr key={product._id} className="text-zinc-700 hover:bg-zinc-50/50 transition">
                       <td className="px-5 py-4">
-                        <div className="flex items-center gap-4">
+                        <Link
+                          href={`/admin/catalog/${product._id}`}
+                          className="flex items-center gap-4 group/item cursor-pointer"
+                        >
                           <img
                             src={product.imageUrls?.[0] || product.imageUrl}
                             alt={product.name}
-                            className="h-12 w-12 rounded-xl object-cover border border-zinc-200 bg-zinc-50 flex-shrink-0"
+                            className="h-12 w-12 rounded-xl object-cover border border-zinc-200 bg-zinc-50 flex-shrink-0 group-hover/item:border-zinc-850 transition"
                             onError={e => {
                               ;(e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=120'
                             }}
                           />
                           <div>
-                            <div className="font-bold text-zinc-950 leading-snug">{product.name}</div>
+                            <div className="font-bold text-zinc-950 leading-snug group-hover/item:text-amber-500 transition-colors duration-200">{product.name}</div>
                             <div className="text-xs text-zinc-500 font-semibold">{product.brand}</div>
                           </div>
-                        </div>
+                        </Link>
                       </td>
                       <td className="px-5 py-4 font-mono text-xs font-bold text-zinc-600">{product.sku}</td>
                       <td className="px-5 py-4">

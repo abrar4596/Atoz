@@ -5,6 +5,7 @@ import { Store, Truck, ShoppingBag, Check, LogIn, Loader2 } from 'lucide-react'
 import { useCart } from '@/context/CartContext'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter, usePathname } from 'next/navigation'
+import Link from 'next/link'
 import { formatCurrency } from '@/lib/utils'
 
 export interface Product {
@@ -91,14 +92,16 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
         </div>
 
         {/* Product Image with Hover Zoom */}
-        <img
-          src={imageUrl || 'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=300&auto=format&fit=crop'}
-          alt={name}
-          className="h-4/5 w-4/5 object-contain mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 group-hover:scale-105"
-          onError={(e) => {
-            e.currentTarget.src = 'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=300&auto=format&fit=crop'
-          }}
-        />
+        <Link href={`/admin/catalog/${product._id}`} className="h-full w-full flex items-center justify-center cursor-pointer">
+          <img
+            src={imageUrl || 'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=300&auto=format&fit=crop'}
+            alt={name}
+            className="h-4/5 w-4/5 object-contain mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 group-hover:scale-105"
+            onError={(e) => {
+              e.currentTarget.src = 'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=300&auto=format&fit=crop'
+            }}
+          />
+        </Link>
 
         <div className="absolute inset-0 bg-black/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       </div>
@@ -111,9 +114,11 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
         </span>
 
         {/* Product Name */}
-        <h3 className="text-sm sm:text-base font-semibold text-zinc-950 dark:text-zinc-50 line-clamp-2 min-h-[2.5rem] mb-2 leading-snug">
-          {name}
-        </h3>
+        <Link href={`/admin/catalog/${product._id}`} className="cursor-pointer">
+          <h3 className="text-sm sm:text-base font-semibold text-zinc-950 dark:text-zinc-50 line-clamp-2 min-h-[2.5rem] mb-2 leading-snug hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
+            {name}
+          </h3>
+        </Link>
 
         {/* Price & Stock info */}
         <div className="flex items-baseline justify-between mb-4">
