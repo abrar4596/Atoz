@@ -76,71 +76,79 @@ export default function Navbar() {
         <div className="w-full flex items-center justify-between gap-1 sm:gap-2.5 relative">
           
           {/* Left Weight Plate (Logo Bumper Plate) */}
-          {/* Deep charcoal rubber bumper plate, metallic insert hub ring, dropshadow */}
-          <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-[#121212] border border-zinc-800 flex items-center justify-center relative shadow-2xl drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] select-none shrink-0 ring-4 ring-inset ring-zinc-800/80 z-20">
-            {/* Metal hub insert ring */}
-            <div className="absolute inset-2.5 sm:inset-3 rounded-full border-[2.5px] border-zinc-700/80 pointer-events-none" />
+          <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center relative shadow-[0_8px_30px_rgba(0,0,0,0.85),_inset_0_2px_4px_rgba(255,255,255,0.06)] select-none shrink-0 hover:scale-102 transition-transform duration-300 z-20">
+            {/* Outer raised lip */}
+            <div className="absolute inset-1 rounded-full border border-zinc-850 bg-zinc-950/20 pointer-events-none" />
+            {/* Inner recessed face */}
+            <div className="absolute inset-2 sm:inset-2.5 rounded-full bg-gradient-to-b from-[#111111] to-[#181818] shadow-[inset_0_3px_6px_rgba(0,0,0,0.9)] pointer-events-none" />
             
-            <Link 
-              href="/" 
-              onClick={handleLogoClick}
-              className="flex items-center justify-center relative z-10 text-center"
-            >
-              <span className="text-base sm:text-lg font-black tracking-tighter text-white uppercase hover:text-indigo-400 transition-colors">
-                AtoZ<span className="text-indigo-500 font-extrabold">.</span>
-              </span>
-            </Link>
+            {/* Polished Chrome Center Sleeve Hub */}
+            <div className="absolute h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gradient-to-b from-zinc-300 via-zinc-100 to-zinc-550 border border-zinc-400 flex items-center justify-center shadow-[0_2px_4px_rgba(0,0,0,0.6),_inset_0_1px_2px_rgba(255,255,255,0.5)] z-10">
+              <Link 
+                href="/" 
+                onClick={handleLogoClick}
+                className="relative z-10 text-center flex flex-col items-center justify-center"
+              >
+                <span className="text-[9px] sm:text-[10px] font-black tracking-tight text-zinc-900 uppercase leading-none drop-shadow-[0_0.5px_0.5px_rgba(255,255,255,0.4)]">
+                  ATOZ
+                </span>
+              </Link>
+            </div>
           </div>
 
-          {/* Left Barbell Collar (Silver chrome lock clip ring) */}
-          <div className="w-2.5 sm:w-3.5 h-11 sm:h-14 bg-gradient-to-b from-zinc-300 via-zinc-100 to-zinc-550 border border-zinc-400 rounded-sm shadow-md shrink-0 z-10" />
+          {/* Left Barbell Collar (Chrome lock clip with screw detail) */}
+          <div className="w-2.5 sm:w-3.5 h-11 sm:h-14 bg-gradient-to-b from-zinc-300 via-zinc-100 to-zinc-550 border border-zinc-400 rounded-sm shadow-[0_3px_5px_rgba(0,0,0,0.5)] shrink-0 z-10 flex items-center justify-center relative">
+            <div className="w-1.5 h-2.5 bg-zinc-850 border border-zinc-700 rounded-xs absolute -top-0.5 shadow-xs" />
+          </div>
 
           {/* Barbell Rod (The main shaft hosting links inside) */}
-          {/* Brushed gunmetal finish, cylindrical linear gradient, inner shadow */}
-          <div className="flex-1 h-9 sm:h-12 bg-gradient-to-b from-zinc-700 via-zinc-400 to-zinc-850 rounded-md sm:rounded-lg flex items-center justify-center px-4 sm:px-8 shadow-[inset_0_2px_4px_rgba(255,255,255,0.2),_inset_0_-2px_4px_rgba(0,0,0,0.75)] border-y border-zinc-650/40 relative z-10 mx-0.5">
-            {/* Brushed metal knurling texture overlay */}
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_50%,rgba(0,0,0,0.05)_50%)] bg-[length:4px_100%] opacity-20 pointer-events-none rounded-md sm:rounded-lg" />
+          <div className="flex-1 h-9 sm:h-12 bg-gradient-to-b from-zinc-750 via-zinc-650 via-zinc-750 to-zinc-850 rounded-md sm:rounded-lg flex items-center justify-center px-4 sm:px-8 shadow-[inset_0_2px_4px_rgba(255,255,255,0.1),_inset_0_-3px_5px_rgba(0,0,0,0.8),_0_6px_15px_rgba(0,0,0,0.6)] border-y border-zinc-600/35 relative mx-0.5 z-10">
+            {/* Knurled metal visual texture overlay */}
+            <div className="absolute inset-0 bg-[linear-gradient(45deg,#2b2b30_25%,transparent_25%),linear-gradient(-45deg,#2b2b30_25%,transparent_25%)] bg-[length:6px_6px] opacity-15 pointer-events-none rounded-md sm:rounded-lg" />
             
             {/* Center Navigation Links (Hidden on mobile) */}
-            <div className="hidden md:flex items-center gap-8 text-[10px] font-black tracking-[0.25em] uppercase drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.9)] text-zinc-100 relative z-10">
+            <div className="hidden md:flex items-center gap-8 text-[10px] font-extrabold tracking-[0.25em] uppercase text-zinc-300 relative z-10">
               <Link 
                 href="/#catalog-section" 
-                className="hover:text-amber-400 hover:scale-102 transition-all relative py-1 after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 hover:after:w-full after:bg-amber-400 after:transition-all"
+                className="hover:text-amber-400 hover:scale-103 transition-all relative py-1 drop-shadow-[0_2px_3px_rgba(0,0,0,0.9)] after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 hover:after:w-full after:bg-amber-400 after:transition-all duration-300"
               >
                 Supplements
               </Link>
               <Link 
                 href="/#catalog-section" 
-                className="hover:text-amber-400 hover:scale-102 transition-all relative py-1 after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 hover:after:w-full after:bg-amber-400 after:transition-all"
+                className="hover:text-amber-400 hover:scale-103 transition-all relative py-1 drop-shadow-[0_2px_3px_rgba(0,0,0,0.9)] after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 hover:after:w-full after:bg-amber-400 after:transition-all duration-300"
               >
                 Pharmacy
               </Link>
               <Link 
                 href="/#catalog-section" 
-                className="hover:text-amber-400 hover:scale-102 transition-all relative py-1 after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 hover:after:w-full after:bg-amber-400 after:transition-all"
+                className="hover:text-amber-400 hover:scale-103 transition-all relative py-1 drop-shadow-[0_2px_3px_rgba(0,0,0,0.9)] after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 hover:after:w-full after:bg-amber-400 after:transition-all duration-300"
               >
                 Store Catalog
               </Link>
             </div>
             
-            {/* Mobile navigation placeholder when barbell center rod is empty on mobile */}
+            {/* Mobile navigation placeholder inside barbell center rod */}
             <div className="flex md:hidden text-[9px] font-black tracking-widest text-zinc-350 uppercase select-none drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
               AtoZ Supplement Store
             </div>
           </div>
 
-          {/* Right Barbell Collar (Metal lock ring) */}
-          <div className="w-2.5 sm:w-3.5 h-11 sm:h-14 bg-gradient-to-b from-zinc-300 via-zinc-100 to-zinc-550 border border-zinc-400 rounded-sm shadow-md shrink-0 z-10" />
+          {/* Right Barbell Collar (Chrome lock clip with screw detail) */}
+          <div className="w-2.5 sm:w-3.5 h-11 sm:h-14 bg-gradient-to-b from-zinc-300 via-zinc-100 to-zinc-550 border border-zinc-400 rounded-sm shadow-[0_3px_5px_rgba(0,0,0,0.5)] shrink-0 z-10 flex items-center justify-center relative">
+            <div className="w-1.5 h-2.5 bg-zinc-850 border border-zinc-700 rounded-xs absolute -top-0.5 shadow-xs" />
+          </div>
 
           {/* Right Weight Plate (Actions Bumper Plate) */}
-          {/* Matching charcoal bumper plate housing search, cart, user profile, and hamburger */}
-          <div className="h-16 px-3.5 sm:h-20 sm:px-6 rounded-full bg-[#121212] border border-zinc-800 flex items-center justify-center relative shadow-2xl drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] select-none shrink-0 ring-4 ring-inset ring-zinc-800/80 z-20 gap-1.5 sm:gap-3">
-            {/* Metal hub insert ring */}
-            <div className="absolute inset-2.5 sm:inset-3 rounded-full border-[2.5px] border-zinc-700/80 pointer-events-none" />
+          <div className="h-16 px-3.5 sm:h-20 sm:px-6 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center relative shadow-[0_8px_30px_rgba(0,0,0,0.85),_inset_0_2px_4px_rgba(255,255,255,0.06)] select-none shrink-0 z-20 gap-1.5 sm:gap-3 hover:scale-102 transition-transform duration-300">
+            {/* Outer raised lip */}
+            <div className="absolute inset-1 rounded-full border border-zinc-850 bg-zinc-950/20 pointer-events-none" />
+            {/* Inner recessed face */}
+            <div className="absolute inset-2 sm:inset-2.5 rounded-full bg-gradient-to-b from-[#111111] to-[#181818] shadow-[inset_0_3px_6px_rgba(0,0,0,0.9)] pointer-events-none" />
 
             <div className="flex items-center gap-1 sm:gap-2.5 relative z-10">
               
-              {/* Search Toggle (Desktop only inside plate) */}
+              {/* Search Toggle (Desktop only) */}
               <div className={`hidden sm:flex relative items-center transition-all duration-350 ${isSearchOpen ? 'w-32 lg:w-44' : 'w-8'}`}>
                 {isSearchOpen && (
                   <input
@@ -148,13 +156,13 @@ export default function Navbar() {
                     placeholder="Search store..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-zinc-950/90 border border-zinc-800 rounded-full py-1 pl-3 pr-8 text-[10px] text-white placeholder-zinc-650 focus:outline-hidden focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-all font-semibold"
+                    className="w-full bg-zinc-950/90 border border-zinc-800 rounded-full py-1 pl-3 pr-8 text-[10px] text-white placeholder-zinc-600 focus:outline-hidden focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-all font-semibold"
                     autoFocus
                   />
                 )}
                 <button
                   onClick={() => setIsSearchOpen(!isSearchOpen)}
-                  className="absolute right-0 p-1.5 text-zinc-450 hover:text-white hover:bg-white/5 rounded-full transition-colors cursor-pointer"
+                  className="absolute right-0 p-1.5 text-zinc-400 hover:text-white hover:bg-white/5 rounded-full transition-colors cursor-pointer"
                   aria-label="Toggle Search"
                 >
                   <Search className="h-4 w-4" />
@@ -164,7 +172,7 @@ export default function Navbar() {
               {/* Cart Trigger Button */}
               <button
                 onClick={toggleCart}
-                className="p-1.5 text-zinc-450 hover:text-white hover:bg-white/5 rounded-full transition-all relative cursor-pointer"
+                className="p-1.5 text-zinc-400 hover:text-white hover:bg-white/5 rounded-full transition-all relative cursor-pointer"
                 aria-label="Open Cart"
               >
                 <ShoppingCart className="h-4.5 w-4.5" />
@@ -238,7 +246,7 @@ export default function Navbar() {
               {/* Hamburger Menu Toggle (Mobile only inside plate) */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="p-1.5 md:hidden text-zinc-450 hover:text-white hover:bg-white/5 rounded-full transition cursor-pointer"
+                className="p-1.5 md:hidden text-zinc-400 hover:text-white hover:bg-white/5 rounded-full transition cursor-pointer"
                 aria-label="Toggle Menu"
               >
                 {isMobileMenuOpen ? <X className="h-4.5 w-4.5" /> : <Menu className="h-4.5 w-4.5" />}
@@ -291,7 +299,7 @@ export default function Navbar() {
                 <Link
                   href="/register"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full text-center py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold uppercase tracking-wider transition"
+                  className="w-full text-center py-2 bg-indigo-600 hover:bg-indigo-550 text-white rounded-lg text-xs font-bold uppercase tracking-wider transition"
                 >
                   Create Account
                 </Link>
