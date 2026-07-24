@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
   Trash2,
+  Pencil,
   PlusCircle,
   Search,
   X,
@@ -296,14 +297,23 @@ export default function CatalogPage() {
                       </td>
                       <td className="px-5 py-4 font-semibold text-zinc-900">{formatCurrency(product.price)}</td>
                       <td className="px-5 py-4 text-right">
-                        <button
-                          type="button"
-                          onClick={() => setSelectedProductToDelete(product)}
-                          className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 hover:border-rose-200 hover:bg-rose-55 px-3 py-2 text-xs font-semibold text-zinc-600 hover:text-rose-600 transition cursor-pointer"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                          Delete
-                        </button>
+                        <div className="flex justify-end gap-2">
+                          <Link
+                            href={`/admin/catalog/${product._id}/edit`}
+                            className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 hover:border-amber-500 hover:bg-amber-50 px-3 py-2 text-xs font-semibold text-zinc-600 hover:text-amber-600 transition cursor-pointer"
+                          >
+                            <Pencil className="h-4 w-4" />
+                            Edit
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedProductToDelete(product)}
+                            className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 hover:border-rose-200 hover:bg-rose-55 px-3 py-2 text-xs font-semibold text-zinc-650 hover:text-rose-650 transition cursor-pointer"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   )

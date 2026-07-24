@@ -15,8 +15,21 @@ export async function fetchStats() {
   return response.data
 }
 
-export async function createProduct(payload: any) {
-  const response = await apiClient.post('/admin/products', payload)
+export async function createProduct(payload: FormData) {
+  const response = await apiClient.post('/admin/products', payload, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+  return response.data
+}
+
+export async function updateProduct(id: string, payload: FormData) {
+  const response = await apiClient.put(`/admin/products/${id}`, payload, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
   return response.data
 }
 
