@@ -74,12 +74,15 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
     <div className="group relative flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800/80 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-zinc-200/50 dark:hover:shadow-black/40 hover:border-zinc-200 dark:hover:border-zinc-700">
       
       {/* Product Image Section */}
-      <div className="relative aspect-square overflow-hidden bg-zinc-50 dark:bg-zinc-950/40 p-4 flex items-center justify-center">
+      <Link
+        href={`/admin/catalog/${product._id}`}
+        className="relative aspect-square overflow-hidden bg-zinc-50 dark:bg-zinc-950/40 p-4 flex items-center justify-center cursor-pointer block"
+      >
         {/* Local Store Availability Badge */}
         <div className="absolute top-3 left-3 z-10">
           {stock > 0 ? (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700 border border-emerald-200/50 shadow-sm dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900/30">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-505 bg-emerald-500 animate-pulse" />
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
               <Store className="h-3 w-3" />
               Pickup Today
             </span>
@@ -92,19 +95,17 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
         </div>
 
         {/* Product Image with Hover Zoom */}
-        <Link href={`/admin/catalog/${product._id}`} className="h-full w-full flex items-center justify-center cursor-pointer">
-          <img
-            src={imageUrl || 'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=300&auto=format&fit=crop'}
-            alt={name}
-            className="h-4/5 w-4/5 object-contain mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 group-hover:scale-105"
-            onError={(e) => {
-              e.currentTarget.src = 'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=300&auto=format&fit=crop'
-            }}
-          />
-        </Link>
+        <img
+          src={imageUrl || 'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=300&auto=format&fit=crop'}
+          alt={name}
+          className="h-4/5 w-4/5 object-contain mix-blend-multiply dark:mix-blend-normal transition-transform duration-500 group-hover:scale-105"
+          onError={(e) => {
+            e.currentTarget.src = 'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=300&auto=format&fit=crop'
+          }}
+        />
 
-        <div className="absolute inset-0 bg-black/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-      </div>
+        <div className="absolute inset-0 bg-black/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none" />
+      </Link>
 
       {/* Product Information */}
       <div className="flex flex-1 flex-col p-4 sm:p-5">
