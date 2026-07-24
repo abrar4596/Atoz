@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Search, ShoppingCart, User, Menu, X, LogOut, ChevronDown } from 'lucide-react'
 import { useCart } from '@/context/CartContext'
 import { useAuth } from '@/context/AuthContext'
+import { motion, useScroll, useTransform } from 'framer-motion'
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -18,7 +19,17 @@ export default function Navbar() {
   const { user, logout, loading } = useAuth()
   const router = useRouter()
 
+  const [isMobile, setIsMobile] = useState(false)
+
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0)
+
+  // Responsive device check to selectively disable 3D rotations on mobile
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Hydration safeguard: set mounted to true after client-side hydration
   useEffect(() => {
@@ -63,15 +74,30 @@ export default function Navbar() {
     }
   }
 
+  // Framer Motion Scroll Progress Hooks
+  const { scrollYProgress } = useScroll()
+
+  // 1. Z-axis tilt (dipping left down to -20deg in first 33% scroll)
+  const rawRotateZ = useTransform(scrollYProgress, [0, 0.33, 1], ["0deg", "-20deg", "0deg"])
+  // 2. X-axis roll (360-degree cylindrical rolling animation forward between 33% and 100% scroll)
+  const rawRotateX = useTransform(scrollYProgress, [0, 0.33, 1], ["0deg", "0deg", "360deg"])
+
+  // Conditionally disable dynamic 3D rotations on mobile screen widths to avoid overflow
+  const rotateZ = useTransform(rawRotateZ, (v) => isMobile ? "0deg" : v)
+  const rotateX = useTransform(rawRotateX, (v) => isMobile ? "0deg" : v)
+
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled
-          ? 'py-2 sm:py-3'
-          : 'py-4 sm:py-6'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 left-0 right-0 z-50 w-full h-[120px] flex items-center justify-center pointer-events-none bg-transparent">
+      {/* Animated Barbell Wrapper */}
+      <motion.div
+        className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pointer-events-auto transform-gpu"
+        style={{
+          rotateZ,
+          rotateX,
+          transformPerspective: 1200,
+          transformOrigin: 'center center',
+        }}
+      >
         {/* The Barbell Assembly */}
         <div className="w-full flex items-center justify-between gap-1 sm:gap-2.5 relative">
           
@@ -88,14 +114,14 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Left Plate 2 (Outer Bumper Plate Cylinder) */}
-          <div className="w-4 h-16 sm:w-5.5 sm:h-22 bg-gradient-to-b from-zinc-800 via-zinc-750 via-zinc-800 to-zinc-950 rounded-sm border-y border-x border-zinc-800 shadow-md shrink-0 z-25" />
+          {/* Left Plate 2 (Outer Olympic Plate - Tall & Slim Bumper) */}
+          <div className="w-2.5 h-16 sm:w-3.5 sm:h-28 bg-gradient-to-b from-zinc-800 via-zinc-700 via-zinc-800 to-zinc-950 rounded-sm border-y border-x border-zinc-800 shadow-md shrink-0 z-25" />
 
-          {/* Left Plate 1 (Inner Bumper Plate Cylinder) */}
-          <div className="w-4 h-16 sm:w-5.5 sm:h-22 bg-gradient-to-b from-zinc-800 via-zinc-750 via-zinc-800 to-zinc-950 rounded-sm border-y border-x border-zinc-800 shadow-md shrink-0 z-25" />
+          {/* Left Plate 1 (Inner Olympic Plate - Tall & Slim Bumper) */}
+          <div className="w-2.5 h-16 sm:w-3.5 sm:h-28 bg-gradient-to-b from-zinc-800 via-zinc-700 via-zinc-800 to-zinc-950 rounded-sm border-y border-x border-zinc-800 shadow-md shrink-0 z-25" />
 
           {/* Left Barbell Collar (Sleeve Stop) */}
-          <div className="w-2 sm:w-3 h-11 sm:h-14 bg-gradient-to-b from-zinc-355 via-zinc-150 to-zinc-550 border border-zinc-400 rounded-sm shadow-md shrink-0 z-10 relative">
+          <div className="w-2 sm:w-3 h-11 sm:h-14 bg-gradient-to-b from-zinc-350 via-zinc-150 to-zinc-550 border border-zinc-400 rounded-sm shadow-md shrink-0 z-10 relative">
             {/* Collar Screw Bolt Pin */}
             <div className="w-1 h-2.5 bg-zinc-800 border border-zinc-750 absolute -top-0.5 left-1/2 -translate-x-1/2 rounded-xs shadow-xs" />
           </div>
@@ -141,11 +167,11 @@ export default function Navbar() {
             <div className="w-1.5 h-2.5 bg-zinc-800 border border-zinc-750 absolute -top-0.5 left-1/2 -translate-x-1/2 rounded-xs shadow-xs" />
           </div>
 
-          {/* Right Plate 1 (Inner Bumper Plate Cylinder) */}
-          <div className="w-4 h-16 sm:w-5.5 sm:h-22 bg-gradient-to-b from-zinc-800 via-zinc-750 via-zinc-800 to-zinc-950 rounded-sm border-y border-x border-zinc-800 shadow-md shrink-0 z-25" />
+          {/* Right Plate 1 (Inner Olympic Plate - Tall & Slim Bumper) */}
+          <div className="w-2.5 h-16 sm:w-3.5 sm:h-28 bg-gradient-to-b from-zinc-800 via-zinc-750 via-zinc-800 to-zinc-950 rounded-sm border-y border-x border-zinc-800 shadow-md shrink-0 z-25" />
 
-          {/* Right Plate 2 (Outer Bumper Plate Cylinder) */}
-          <div className="w-4 h-16 sm:w-5.5 sm:h-22 bg-gradient-to-b from-zinc-800 via-zinc-750 via-zinc-800 to-zinc-950 rounded-sm border-y border-x border-zinc-800 shadow-md shrink-0 z-25" />
+          {/* Right Plate 2 (Outer Olympic Plate - Tall & Slim Bumper) */}
+          <div className="w-2.5 h-16 sm:w-3.5 sm:h-28 bg-gradient-to-b from-zinc-800 via-zinc-750 via-zinc-800 to-zinc-950 rounded-sm border-y border-x border-zinc-800 shadow-md shrink-0 z-25" />
 
           {/* Right Sleeve Tip (Threaded steel sleeve housing actions) */}
           <div className="h-9 px-3 sm:h-11 sm:px-5 bg-gradient-to-b from-zinc-300 via-zinc-100 to-zinc-500 border border-zinc-400 rounded-r-lg flex items-center justify-center shadow-lg relative shrink-0 gap-1.5 sm:gap-2.5 z-30">
@@ -162,7 +188,7 @@ export default function Navbar() {
                     placeholder="Search..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-zinc-950/95 border border-zinc-700 rounded-full py-0.5 pl-3 pr-7 text-[10px] text-white placeholder-zinc-500 focus:outline-hidden focus:border-zinc-800 focus:ring-1 focus:ring-zinc-850/20 transition-all font-semibold"
+                    className="w-full bg-zinc-955/95 border border-zinc-700 rounded-full py-0.5 pl-3 pr-7 text-[10px] text-white placeholder-zinc-500 focus:outline-hidden focus:border-zinc-800 focus:ring-1 focus:ring-zinc-850/20 transition-all font-semibold"
                     autoFocus
                   />
                 )}
@@ -215,7 +241,7 @@ export default function Navbar() {
 
                     {/* Desktop User Menu Dropdown */}
                     {isUserMenuOpen && (
-                      <div className="absolute right-0 top-full mt-3 w-48 bg-zinc-950/95 backdrop-blur-2xl border border-zinc-800 rounded-2xl shadow-2xl shadow-black/80 overflow-hidden animate-in fade-in zoom-in-95 duration-150 z-50">
+                      <div className="absolute right-0 top-full mt-3 w-48 bg-zinc-955/95 backdrop-blur-2xl border border-zinc-800 rounded-2xl shadow-2xl shadow-black/80 overflow-hidden animate-in fade-in zoom-in-95 duration-150 z-50">
                         <div className="p-2.5 space-y-0.5">
                           <Link 
                             href={user.isAdmin ? '/admin' : '/dashboard'} 
@@ -255,14 +281,14 @@ export default function Navbar() {
                 className="p-1 text-zinc-900 hover:text-indigo-850 hover:bg-black/5 rounded-full transition cursor-pointer"
                 aria-label="Toggle Menu"
               >
-                {isMobileMenuOpen ? <X className="h-4.5 w-4.5" /> : <Menu className="h-4.5 w-4.5" />}
+                {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
               </button>
 
             </div>
           </div>
 
         </div>
-      </div>
+      </motion.div>
 
       {/* Mobile Sliding Menu (styled matching iron/barbell panel) */}
       {isMobileMenuOpen && (
@@ -363,6 +389,6 @@ export default function Navbar() {
           </div>
         </div>
       )}
-    </nav>
+    </header>
   )
 }
