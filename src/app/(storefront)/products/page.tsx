@@ -1,13 +1,10 @@
-import Link from 'next/link'
+import ProductGrid from "@/components/storefront/ProductGrid"
 
-export default function ProductsPlaceholder() {
+export default function ProductsPage() {
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center space-y-4">
-      <h1 className="text-3xl font-black uppercase">Products Catalog</h1>
-      <p className="text-zinc-400">All products are displayed on the home page.</p>
-      <Link href="/" className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-full transition">
-        Go Back Home
-      </Link>
+    <div className="min-h-screen bg-black text-white pt-24 pb-12">
+      <div className="absolute inset-0 bg-radial-gradient from-indigo-950/15 via-transparent to-transparent -z-10" />
+      <ProductGrid />
     </div>
   )
 }

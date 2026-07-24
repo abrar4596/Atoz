@@ -3,6 +3,7 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Sparkles, Pill, Activity, ArrowRight, ShieldCheck, Zap, ChevronDown } from 'lucide-react'
+import Link from 'next/link'
 import ProductGrid from './ProductGrid'
 import CanvasBackground from './CanvasBackground'
 
@@ -68,14 +69,14 @@ export default function FrontPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center w-full sm:w-auto">
-              <button
-                onClick={scrollToCatalog}
+              <Link
+                href="/products"
                 className="group flex items-center justify-center gap-2.5 px-8 py-4 bg-white hover:bg-zinc-200 text-black text-sm sm:text-base font-extrabold rounded-full transition-all duration-300 shadow-xl hover:shadow-white/10 hover:-translate-y-0.5 cursor-pointer"
               >
                 <Zap className="h-4.5 w-4.5 text-indigo-600 group-hover:scale-110 transition-transform" />
                 Shop Supplements
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </button>
+              </Link>
 
               <button
                 onClick={scrollToCatalog}

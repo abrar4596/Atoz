@@ -1,8 +1,9 @@
 import Link from 'next/link'
-import { Package2, PackageCheck, ShieldCheck, TrendingUp, PlusCircle } from 'lucide-react'
+import { Package, Package2, PackageCheck, ShieldCheck, TrendingUp, PlusCircle } from 'lucide-react'
 
 const navLinks = [
   { href: '/admin', label: 'ROI Dashboard', icon: TrendingUp },
+  { href: '/admin/catalog', label: 'Product Catalog', icon: Package },
   { href: '/admin/inventory', label: 'Inventory Alerts', icon: Package2 },
   { href: '/admin/orders', label: 'Order Management', icon: PackageCheck },
   { href: '/admin/catalog/new', label: 'Add Product', icon: PlusCircle },

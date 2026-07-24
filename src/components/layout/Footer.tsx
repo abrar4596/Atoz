@@ -14,8 +14,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Column 1: Brand & Trust */}
           <div className="space-y-4">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="inline-flex items-center gap-2"
             >
               <span className="text-xl font-black tracking-tighter text-white uppercase">
@@ -31,26 +31,26 @@ export default function Footer() {
           <div className="space-y-3">
             <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-300">Quick Links</h3>
             <div className="space-y-2">
-              <Link 
-                href="/#catalog-section" 
+              <Link
+                href="/#catalog-section"
                 className="block text-sm text-zinc-400 hover:text-white transition-colors"
               >
                 Shop Supplements
               </Link>
-              <Link 
-                href="/#catalog-section" 
+              <Link
+                href="/#catalog-section"
                 className="block text-sm text-zinc-400 hover:text-white transition-colors"
               >
                 Shop Pharmacy
               </Link>
-              <Link 
-                href="/dashboard" 
+              <Link
+                href="/dashboard"
                 className="block text-sm text-zinc-400 hover:text-white transition-colors"
               >
                 Customer Dashboard
               </Link>
-              <Link 
-                href="#" 
+              <Link
+                href="#"
                 className="block text-sm text-zinc-400 hover:text-white transition-colors"
               >
                 Cart
@@ -62,26 +62,26 @@ export default function Footer() {
           <div className="space-y-3">
             <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-300">Customer Service</h3>
             <div className="space-y-2">
-              <Link 
-                href="#" 
+              <Link
+                href="#"
                 className="block text-sm text-zinc-400 hover:text-white transition-colors"
               >
                 Shipping & Local Delivery
               </Link>
-              <Link 
-                href="#" 
+              <Link
+                href="#"
                 className="block text-sm text-zinc-400 hover:text-white transition-colors"
               >
                 In-Store Pickup
               </Link>
-              <Link 
-                href="#" 
+              <Link
+                href="#"
                 className="block text-sm text-zinc-400 hover:text-white transition-colors"
               >
                 Return Policy
               </Link>
-              <Link 
-                href="#" 
+              <Link
+                href="#"
                 className="block text-sm text-zinc-400 hover:text-white transition-colors"
               >
                 FAQ
@@ -95,18 +95,18 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-start gap-3 text-sm text-zinc-400">
                 <MapPin className="h-4 w-4 shrink-0 text-indigo-400 mt-0.5" />
-                <span>100 Supplements Way, Wellness District, CA 90210</span>
+                <span>Hospital Chowk, Amahiya Road</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-zinc-400">
                 <Phone className="h-4 w-4 shrink-0 text-indigo-400" />
-                <a href="tel:+15551234567" className="hover:text-white transition-colors">
-                  (555) 123-4567
+                <a href="tel:+9911411414" className="hover:text-white transition-colors">
+                  (909) 841-1414
                 </a>
               </div>
               <div className="flex items-center gap-3 text-sm text-zinc-400">
                 <Mail className="h-4 w-4 shrink-0 text-indigo-400" />
-                <a href="mailto:support@atoz.store" className="hover:text-white transition-colors">
-                  support@atoz.store
+                <a href="mailto:arizkhaan.0607@gmail.com" className="hover:text-white transition-colors">
+                  arizkhaan.0607@gmail.com
                 </a>
               </div>
             </div>
@@ -115,14 +115,14 @@ export default function Footer() {
             <div className="pt-2">
               <h4 className="text-xs font-bold uppercase tracking-widest text-zinc-300 mb-3">Newsletter</h4>
               <div className="flex gap-2">
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   placeholder="Your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="flex-1 bg-zinc-900/70 border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-zinc-500 focus:outline-hidden focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-all"
                 />
-                <button 
+                <button
                   className="bg-indigo-600 hover:bg-indigo-550 text-white text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-lg transition-all shadow-md hover:shadow-indigo-500/20"
                 >
                   Subscribe
