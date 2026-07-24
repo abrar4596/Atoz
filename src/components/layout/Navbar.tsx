@@ -75,24 +75,26 @@ export default function Navbar() {
         {/* The Barbell Assembly */}
         <div className="w-full flex items-center justify-between gap-1 sm:gap-2.5 relative">
           
-          {/* Left Weight Plate (Logo Bumper Plate) */}
-          <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center relative shadow-[0_8px_30px_rgba(0,0,0,0.85),_inset_0_2px_4px_rgba(255,255,255,0.06)] select-none shrink-0 hover:scale-102 transition-transform duration-300 z-20">
-            {/* Outer raised lip */}
-            <div className="absolute inset-1 rounded-full border border-zinc-850 bg-zinc-950/20 pointer-events-none" />
-            {/* Inner recessed face */}
-            <div className="absolute inset-2 sm:inset-2.5 rounded-full bg-gradient-to-b from-[#111111] to-[#181818] shadow-[inset_0_3px_6px_rgba(0,0,0,0.9)] pointer-events-none" />
-            
-            {/* Polished Chrome Center Sleeve Hub */}
-            <div className="absolute h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gradient-to-b from-zinc-300 via-zinc-100 to-zinc-550 border border-zinc-400 flex items-center justify-center shadow-[0_2px_4px_rgba(0,0,0,0.6),_inset_0_1px_2px_rgba(255,255,255,0.5)] z-10">
-              <Link 
-                href="/" 
-                onClick={handleLogoClick}
-                className="relative z-10 text-center flex flex-col items-center justify-center"
-              >
-                <span className="text-[9px] sm:text-[10px] font-black tracking-tight text-zinc-900 uppercase leading-none drop-shadow-[0_0.5px_0.5px_rgba(255,255,255,0.4)]">
-                  ATOZ
-                </span>
-              </Link>
+          {/* Left Weight Plate Stack (3 Loaded Bumper Plates) */}
+          <div className="relative h-16 w-20 sm:h-20 sm:w-30 shrink-0 select-none z-20 hover:scale-102 transition-transform duration-300">
+            {/* Inner Plate 1 (Closest to collar) */}
+            <div className="absolute left-6 sm:left-10 h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-[#101010] border border-zinc-900 shadow-inner ring-4 ring-inset ring-zinc-800/40 z-10" />
+            {/* Middle Plate 2 */}
+            <div className="absolute left-3 sm:left-5 h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-[#161616] border border-zinc-850 shadow-md ring-4 ring-inset ring-zinc-800/60 z-20" />
+            {/* Outer Plate 3 (With Logo center hub) */}
+            <div className="absolute left-0 h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-[#121212] border border-zinc-800 flex items-center justify-center shadow-lg ring-4 ring-inset ring-zinc-800/80 z-30">
+              {/* Polished Chrome Center Sleeve Hub */}
+              <div className="absolute h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gradient-to-b from-zinc-300 via-zinc-100 to-zinc-550 border border-zinc-400 flex items-center justify-center shadow-[0_2px_4px_rgba(0,0,0,0.6),_inset_0_1px_2px_rgba(255,255,255,0.5)] z-10">
+                <Link 
+                  href="/" 
+                  onClick={handleLogoClick}
+                  className="relative z-10 text-center flex flex-col items-center justify-center"
+                >
+                  <span className="text-[9px] sm:text-[10px] font-black tracking-tight text-zinc-900 uppercase leading-none drop-shadow-[0_0.5px_0.5px_rgba(255,255,255,0.4)]">
+                    ATOZ
+                  </span>
+                </Link>
+              </div>
             </div>
           </div>
 
@@ -139,14 +141,14 @@ export default function Navbar() {
             <div className="w-1.5 h-2.5 bg-zinc-850 border border-zinc-700 rounded-xs absolute -top-0.5 shadow-xs" />
           </div>
 
-          {/* Right Weight Plate (Actions Bumper Plate) */}
-          <div className="h-16 px-3.5 sm:h-20 sm:px-6 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center relative shadow-[0_8px_30px_rgba(0,0,0,0.85),_inset_0_2px_4px_rgba(255,255,255,0.06)] select-none shrink-0 z-20 gap-1.5 sm:gap-3 hover:scale-102 transition-transform duration-300">
-            {/* Outer raised lip */}
-            <div className="absolute inset-1 rounded-full border border-zinc-850 bg-zinc-950/20 pointer-events-none" />
-            {/* Inner recessed face */}
-            <div className="absolute inset-2 sm:inset-2.5 rounded-full bg-gradient-to-b from-[#111111] to-[#181818] shadow-[inset_0_3px_6px_rgba(0,0,0,0.9)] pointer-events-none" />
-
-            <div className="flex items-center gap-1 sm:gap-2.5 relative z-10">
+          {/* Right Weight Plate Stack (3 Loaded Bumper Plates) */}
+          <div className="relative h-16 w-28 sm:h-20 sm:w-44 shrink-0 select-none z-20 hover:scale-102 transition-transform duration-300">
+            {/* Inner Plate 1 (Closest to collar) */}
+            <div className="absolute left-0 h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-[#101010] border border-zinc-900 shadow-inner ring-4 ring-inset ring-zinc-800/40 z-10" />
+            {/* Middle Plate 2 */}
+            <div className="absolute left-3 sm:left-5 h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-[#161616] border border-zinc-850 shadow-md ring-4 ring-inset ring-zinc-800/60 z-20" />
+            {/* Outer Plate 3 (Pill shape containing Actions) */}
+            <div className="absolute left-6 sm:left-10 h-16 right-0 sm:h-20 rounded-full bg-[#121212] border border-zinc-800 flex items-center justify-center shadow-lg ring-4 ring-inset ring-zinc-800/80 z-30 gap-1.5 sm:gap-2.5 px-3 sm:px-5">
               
               {/* Search Toggle (Desktop only) */}
               <div className={`hidden sm:flex relative items-center transition-all duration-350 ${isSearchOpen ? 'w-32 lg:w-44' : 'w-8'}`}>
@@ -201,7 +203,7 @@ export default function Navbar() {
                       onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                       className="flex items-center gap-1.5 text-[10px] font-black tracking-wider uppercase text-zinc-300 hover:text-white transition-colors py-1"
                     >
-                      <div className="h-7 w-7 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white text-[10px] font-black border border-white/10">
+                      <div className="h-7 w-7 rounded-full bg-gradient-to-br from-indigo-600 to-purple-650 flex items-center justify-center text-white text-[10px] font-black border border-white/10">
                         {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
                       </div>
                       <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${isUserMenuOpen ? 'rotate-180' : ''}`} />
@@ -307,7 +309,7 @@ export default function Navbar() {
             ) : user ? (
               <>
                 <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-zinc-900/60 border border-zinc-850/80 mb-1">
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white text-[10px] font-black border border-white/10">
+                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-600 to-purple-655 flex items-center justify-center text-white text-[10px] font-black border border-white/10">
                     {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
                   </div>
                   <div className="flex flex-col">
@@ -348,7 +350,7 @@ export default function Navbar() {
                 <Link
                   href="/register"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full text-center py-2 bg-indigo-600 hover:bg-indigo-550 text-white rounded-lg text-xs font-bold uppercase tracking-wider transition"
+                  className="w-full text-center py-2 bg-indigo-650 hover:bg-indigo-550 text-white rounded-lg text-xs font-bold uppercase tracking-wider transition"
                 >
                   Create Account
                 </Link>
