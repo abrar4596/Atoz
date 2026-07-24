@@ -126,7 +126,7 @@ export default function StorefrontProductDetailPage({ params }: { params: Promis
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
+      <div className="max-w-7xl mx-auto px-4 pt-28 pb-12 space-y-6">
         <Link
           href="/products"
           className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-zinc-200 font-semibold transition"
@@ -157,7 +157,7 @@ export default function StorefrontProductDetailPage({ params }: { params: Promis
 
   if (error || !data) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
+      <div className="max-w-7xl mx-auto px-4 pt-28 pb-12 space-y-6">
         <Link
           href="/products"
           className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-zinc-200 font-semibold transition"
@@ -183,7 +183,7 @@ export default function StorefrontProductDetailPage({ params }: { params: Promis
       : ['https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=600']
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 space-y-6 relative">
+    <div className="max-w-7xl mx-auto px-4 pt-28 pb-12 space-y-6 relative">
       {/* Toast Notification */}
       {toast && (
         <div className="fixed top-24 right-6 z-55 flex items-center gap-3 rounded-2xl border border-emerald-500/30 bg-emerald-950/80 backdrop-blur-md px-4 py-3.5 shadow-2xl text-emerald-400 animate-slide-in">
