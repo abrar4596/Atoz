@@ -14,7 +14,8 @@ import {
   Loader2,
   PackageCheck,
   Tag,
-  DollarSign
+  DollarSign,
+  Eye
 } from 'lucide-react'
 import { apiClient } from '@/services/apiClient'
 import { fetchProducts } from '@/services/productApi'
@@ -299,6 +300,13 @@ export default function CatalogPage() {
                       <td className="px-5 py-4 font-semibold text-zinc-900">{formatCurrency(product.price)}</td>
                       <td className="px-5 py-4 text-right">
                         <div className="flex justify-end gap-2">
+                          <Link
+                            href={`/admin/catalog/${product._id}`}
+                            className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 hover:border-zinc-800 hover:bg-zinc-100 px-3 py-2 text-xs font-semibold text-zinc-600 hover:text-zinc-900 transition cursor-pointer"
+                          >
+                            <Eye className="h-4 w-4" />
+                            Preview
+                          </Link>
                           <Link
                             href={`/admin/catalog/${product._id}/edit`}
                             className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-200 hover:border-amber-500 hover:bg-amber-50 px-3 py-2 text-xs font-semibold text-zinc-600 hover:text-amber-600 transition cursor-pointer"

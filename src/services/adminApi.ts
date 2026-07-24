@@ -38,3 +38,9 @@ export async function fetchDistributors() {
   return response.data
 }
 
+export async function fetchProductPreview(id: string) {
+  const response = await apiClient.get(`/admin/products/${id}`)
+  return response.data
+}
+
+
