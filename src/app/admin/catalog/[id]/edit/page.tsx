@@ -5,8 +5,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { CheckCircle2, ArrowLeft, AlertCircle, Loader2 } from 'lucide-react'
 import Link from 'next/link'
-import { updateProduct } from '@/services/adminApi'
-import { fetchProductById } from '@/services/productApi'
+import { updateProduct, fetchProductPreview } from '@/services/adminApi'
 import ProductForm from '@/components/admin/ProductForm'
 
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
@@ -23,12 +22,12 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     async function loadProduct() {
       try {
         setLoading(true)
-        const res = await fetchProductById(id)
-        if (res.success && res.data) {
+        const res = await fetchProductPreview(id)
+        if (res.success && res.product) {
           // Re-map fields so they fit the ProductForm's expected initialData structure
           setInitialData({
-            product: res.data,
-            inventory: res.data.inventory
+            product: res.product,
+            inventory: res.inventory
           })
         } else {
           setError(res.error || 'Failed to fetch product details.')

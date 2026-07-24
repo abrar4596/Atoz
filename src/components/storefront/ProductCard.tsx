@@ -75,7 +75,7 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
       
       {/* Product Image Section */}
       <Link
-        href={`/admin/catalog/${product._id}`}
+        href={`/products/${product._id}`}
         className="relative aspect-square overflow-hidden bg-zinc-50 dark:bg-zinc-950/40 p-4 flex items-center justify-center cursor-pointer block"
       >
         {/* Local Store Availability Badge */}
@@ -115,7 +115,7 @@ export default function ProductCard({ product, onAddToCart }: ProductCardProps) 
         </span>
 
         {/* Product Name */}
-        <Link href={`/admin/catalog/${product._id}`} className="cursor-pointer">
+        <Link href={`/products/${product._id}`} className="cursor-pointer">
           <h3 className="text-sm sm:text-base font-semibold text-zinc-950 dark:text-zinc-50 line-clamp-2 min-h-[2.5rem] mb-2 leading-snug hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
             {name}
           </h3>
