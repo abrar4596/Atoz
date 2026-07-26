@@ -109,8 +109,8 @@ export function AdminInventoryAlerts({ inventoryItems }: { inventoryItems: Inven
                         <div className="flex items-center gap-2">
                           <span className="font-bold">{item.stockQuantity}</span>
                           {item.stockQuantity < 3 && (
-                            <span className="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded font-bold uppercase">
-                              Low
+                            <span className="text-[10px] text-rose-700 bg-rose-50 border border-rose-200 px-1.5 py-0.5 rounded-full font-bold uppercase">
+                              Low Stock
                             </span>
                           )}
                         </div>
@@ -119,7 +119,7 @@ export function AdminInventoryAlerts({ inventoryItems }: { inventoryItems: Inven
                         <div className="flex items-center gap-2">
                           <span>{daysToExpiry < 60 ? `${daysToExpiry} days` : 'Grip safe'}</span>
                           {daysToExpiry < 60 && (
-                            <span className="text-[10px] text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded font-bold uppercase">
+                            <span className="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-full font-bold uppercase">
                               Expiring
                             </span>
                           )}

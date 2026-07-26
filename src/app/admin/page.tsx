@@ -3,20 +3,8 @@
 import { useState, useEffect } from 'react'
 import { ArrowRight, AlertTriangle, DollarSign, PackageCheck, Loader2 } from 'lucide-react'
 import Link from 'next/link'
-import { fetchStats } from '@/services/adminApi'
+import axios from 'axios'
 import { formatCurrency } from '@/lib/utils'
-
-// Mock data fallback for when backend is down
-const MOCK_STATS = {
-  cashSaved: 1250000,
-  criticalActionRequired: 8,
-  flaggedItems: [
-    { _id: '1', productId: { name: 'Organic Milk' }, stockQuantity: 2, batchNumber: 'BATCH-001' },
-    { _id: '2', productId: { name: 'Fresh Eggs' }, stockQuantity: 1, batchNumber: 'BATCH-002' },
-    { _id: '3', productId: { name: 'Greek Yogurt' }, stockQuantity: 3, batchNumber: 'BATCH-003' },
-    { _id: '4', productId: { name: 'Whole Wheat Bread' }, stockQuantity: 2, batchNumber: 'BATCH-004' },
-  ]
-}
 
 export default function AdminPage() {
   const [stats, setStats] = useState<any>(null)
@@ -27,20 +15,28 @@ export default function AdminPage() {
     const getStats = async () => {
       try {
         setLoading(true)
-        const res = await fetchStats()
-        console.log('fetchStats response:', res)
-        if (res.success) {
-          setStats(res.data)
+        const token = typeof window !== 'undefined' ? localStorage.getItem('atoz_jwt_token') : null
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+        
+        const response = await axios.get(`${apiUrl}/admin/dashboard/roi`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          withCredentials: true,
+        })
+        
+        if (response.data && response.data.success) {
+          const { cashSaved, criticalActionCount, alerts } = response.data.data
+          setStats({
+            cashSaved,
+            criticalActionRequired: criticalActionCount,
+            flaggedItems: alerts
+          })
+          setError(null)
         } else {
-          console.warn('fetchStats not successful, using mock data')
-          setStats(MOCK_STATS)
-          setError(res.error || 'Failed to load live stats - showing demo data')
+          throw new Error(response.data?.error || 'Failed to fetch dashboard ROI stats')
         }
       } catch (err: any) {
         console.error('Stats loading error:', err)
-        console.warn('Using mock data due to error')
-        setStats(MOCK_STATS)
-        setError('Backend unavailable - showing demo data')
+        setError('Failed to load live data')
       } finally {
         setLoading(false)
       }
@@ -50,18 +46,30 @@ export default function AdminPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 space-y-4">
-        <Loader2 className="h-8 w-8 animate-spin text-indigo-500" />
-        <p className="text-zinc-500 text-sm">Loading admin dashboard...</p>
+      <div className="space-y-6 animate-pulse">
+        {/* Banner Skeleton */}
+        <div className="rounded-3xl bg-zinc-900 p-6 h-36 border border-zinc-800"></div>
+        {/* KPI Cards Skeleton */}
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="rounded-3xl bg-zinc-100 p-6 h-36 border border-zinc-200"></div>
+          <div className="rounded-3xl bg-zinc-100 p-6 h-36 border border-zinc-200"></div>
+        </div>
+        {/* Alerts Card Skeleton */}
+        <div className="rounded-3xl bg-zinc-50 p-6 h-64 border border-zinc-200 space-y-3">
+          <div className="h-6 bg-zinc-200 rounded w-1/4"></div>
+          <div className="h-12 bg-zinc-200 rounded-2xl"></div>
+          <div className="h-12 bg-zinc-200 rounded-2xl"></div>
+          <div className="h-12 bg-zinc-200 rounded-2xl"></div>
+        </div>
       </div>
     )
   }
 
   return (
     <div className="space-y-6">
-      {/* Warning banner if using mock data */}
+      {/* Error banner if live fetch failed */}
       {error && (
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-700 flex items-center gap-2">
+        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-rose-700 flex items-center gap-2">
           <AlertTriangle className="h-5 w-5" />
           <p className="text-sm">{error}</p>
         </div>
@@ -84,57 +92,80 @@ export default function AdminPage() {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-zinc-500">Cash Saved (30 Days)</p>
-              <p className="mt-2 text-4xl font-semibold text-zinc-950">{formatCurrency(stats.cashSaved)}</p>
-            </div>
-            <div className="rounded-2xl bg-emerald-100 p-3 text-emerald-700">
-              <DollarSign className="h-6 w-6" />
-            </div>
-          </div>
-          <p className="mt-4 text-sm text-zinc-500">Estimated value preserved by restocking flagged inventory before spoilage.</p>
-        </div>
-
-        <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-zinc-500">Critical Action Required</p>
-              <p className="mt-2 text-4xl font-semibold text-rose-600">{stats.criticalActionRequired}</p>
-            </div>
-            <div className="rounded-2xl bg-rose-100 p-3 text-rose-700">
-              <AlertTriangle className="h-6 w-6" />
-            </div>
-          </div>
-          <p className="mt-4 text-sm text-zinc-500">SKUs under 3 units or expiring within 60 days.</p>
-        </div>
-      </div>
-
-      <div className="rounded-3xl border border-zinc-200 bg-zinc-50 p-6 shadow-sm">
-        <div className="flex items-center gap-2 text-zinc-900">
-          <PackageCheck className="h-5 w-5 text-amber-500" />
-          <h2 className="text-lg font-semibold">Current alerts</h2>
-        </div>
-        <div className="mt-4 space-y-3">
-          {stats.flaggedItems.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-zinc-300 bg-white p-4 text-sm text-zinc-500">
-              No urgent inventory issues detected right now.
-            </div>
-          ) : (
-            stats.flaggedItems.slice(0, 4).map((item: any) => (
-              <div key={item._id} className="flex flex-wrap items-center justify-between rounded-2xl border border-zinc-200 bg-white px-4 py-3">
+      {stats && (
+        <>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
+              <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-semibold text-zinc-950">{item.productId?.name ?? 'Unknown product'}</p>
-                  <p className="text-sm text-zinc-500">{item.stockQuantity} units • Batch {item.batchNumber}</p>
+                  <p className="text-sm font-medium text-zinc-500">Cash Saved (30 Days)</p>
+                  <p className="mt-2 text-4xl font-semibold text-zinc-950">{formatCurrency(stats.cashSaved)}</p>
                 </div>
-                <div className="rounded-2xl bg-rose-50 px-3 py-1 text-sm font-semibold text-rose-600">Action needed</div>
+                <div className="rounded-2xl bg-emerald-100 p-3 text-emerald-700">
+                  <DollarSign className="h-6 w-6" />
+                </div>
               </div>
-            ))
-          )}
-        </div>
-      </div>
+              <p className="mt-4 text-sm text-zinc-500">Estimated value preserved by restocking flagged inventory before spoilage.</p>
+            </div>
+
+            <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-zinc-500">Critical Action Required</p>
+                  <p className="mt-2 text-4xl font-semibold text-rose-600">{stats.criticalActionRequired}</p>
+                </div>
+                <div className="rounded-2xl bg-rose-100 p-3 text-rose-700">
+                  <AlertTriangle className="h-6 w-6" />
+                </div>
+              </div>
+              <p className="mt-4 text-sm text-zinc-500">SKUs under 3 units or expiring within 60 days.</p>
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-zinc-200 bg-zinc-50 p-6 shadow-sm">
+            <div className="flex items-center gap-2 text-zinc-900">
+              <PackageCheck className="h-5 w-5 text-amber-500" />
+              <h2 className="text-lg font-semibold">Current alerts</h2>
+            </div>
+            <div className="mt-4 space-y-3">
+              {!stats.flaggedItems || stats.flaggedItems.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-zinc-300 bg-white p-4 text-sm text-zinc-500">
+                  No urgent inventory issues detected right now.
+                </div>
+              ) : (
+                stats.flaggedItems.slice(0, 4).map((item: any) => {
+                  let badgeColor = 'bg-zinc-100 text-zinc-800 border-zinc-200'
+                  let badgeText = item.issue || 'Action needed'
+
+                  if (item.issue === 'Low Stock') {
+                    badgeColor = 'bg-rose-50 text-rose-700 border-rose-200'
+                  } else if (item.issue === 'Expiring Soon') {
+                    badgeColor = 'bg-amber-50 text-amber-700 border-amber-200'
+                  } else if (item.issue === 'Critical: Both') {
+                    badgeColor = 'bg-red-50 text-red-700 border-red-200 font-bold'
+                  }
+
+                  return (
+                    <div key={item._id} className="flex flex-wrap items-center justify-between rounded-2xl border border-zinc-200 bg-white px-4 py-3">
+                      <div>
+                        <p className="font-semibold text-zinc-950">{item.productId?.name ?? 'Unknown product'}</p>
+                        <p className="text-sm text-zinc-500">
+                          {item.stockQuantity} units • Batch {item.batchNumber}
+                          {item.expiryDate && ` • Expiry: ${new Date(item.expiryDate).toLocaleDateString('en-IN')}`}
+                        </p>
+                      </div>
+                      <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold shadow-sm ${badgeColor}`}>
+                        {badgeText}
+                      </span>
+                    </div>
+                  )
+                })
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
+
