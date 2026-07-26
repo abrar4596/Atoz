@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Search, ShoppingCart, User, Menu, X, LogOut, ChevronDown } from 'lucide-react'
 import { useCart } from '@/context/CartContext'
 import { useAuth } from '@/context/AuthContext'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -290,105 +290,113 @@ export default function Navbar() {
         </div>
       </motion.div>
 
-      {/* Mobile Sliding Menu (styled matching iron/barbell panel) */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden bg-zinc-950/95 backdrop-blur-2xl border-t border-zinc-900 mt-2 mx-4 px-5 py-5 rounded-2xl space-y-4 animate-slide-down shadow-2xl relative z-40">
-          <div className="space-y-1">
-            <Link
-              href="/#catalog-section"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-zinc-400 hover:bg-white/5 hover:text-white transition"
-            >
-              Supplements
-            </Link>
-            <Link
-              href="/#catalog-section"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-zinc-400 hover:bg-white/5 hover:text-white transition"
-            >
-              Pharmacy
-            </Link>
-            <Link
-              href="/#catalog-section"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-zinc-400 hover:bg-white/5 hover:text-white transition"
-            >
-              Store Catalog
-            </Link>
-          </div>
-          
-          <div className="border-t border-zinc-900 pt-3 flex flex-col gap-1.5">
-            {!mounted || loading ? (
-              <>
-                <Link
-                  href="/login"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-zinc-300 hover:bg-white/5 hover:text-white transition"
-                >
-                  <User className="h-4 w-4" />
-                  Sign In
-                </Link>
-                <Link
-                  href="/register"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full text-center py-2 bg-indigo-650 hover:bg-indigo-550 text-white rounded-lg text-xs font-bold uppercase tracking-wider transition"
-                >
-                  Create Account
-                </Link>
-              </>
-            ) : user ? (
-              <>
-                <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-zinc-900/60 border border-zinc-850/80 mb-1">
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-600 to-purple-650 flex items-center justify-center text-white text-[10px] font-black border border-white/10">
-                    {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+      {/* Mobile Sliding Menu (decoupled sibling styled with absolute positioning & glassmorphism) */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="md:hidden absolute top-full left-0 w-full z-50 pointer-events-auto bg-black/95 backdrop-blur-md border-t border-zinc-900 px-6 py-6 space-y-4 shadow-2xl"
+          >
+            <div className="space-y-1">
+              <Link
+                href="/#catalog-section"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-zinc-400 hover:bg-white/5 hover:text-white transition"
+              >
+                Supplements
+              </Link>
+              <Link
+                href="/#catalog-section"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-zinc-400 hover:bg-white/5 hover:text-white transition"
+              >
+                Pharmacy
+              </Link>
+              <Link
+                href="/#catalog-section"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-zinc-400 hover:bg-white/5 hover:text-white transition"
+              >
+                Store Catalog
+              </Link>
+            </div>
+            
+            <div className="border-t border-zinc-900 pt-3 flex flex-col gap-1.5">
+              {!mounted || loading ? (
+                <>
+                  <Link
+                    href="/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-zinc-300 hover:bg-white/5 hover:text-white transition"
+                  >
+                    <User className="h-4 w-4" />
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full text-center py-2 bg-indigo-650 hover:bg-indigo-550 text-white rounded-lg text-xs font-bold uppercase tracking-wider transition"
+                  >
+                    Create Account
+                  </Link>
+                </>
+              ) : user ? (
+                <>
+                  <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-zinc-900/60 border border-zinc-850/80 mb-1">
+                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-600 to-purple-650 flex items-center justify-center text-white text-[10px] font-black border border-white/10">
+                      {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-xs font-bold text-white uppercase tracking-wide">
+                        {user.name || 'User'}
+                      </span>
+                      <span className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest">
+                        {user.isAdmin ? 'Admin' : 'Customer'}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex flex-col">
-                    <span className="text-xs font-bold text-white uppercase tracking-wide">
-                      {user.name || 'User'}
-                    </span>
-                    <span className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest">
-                      {user.isAdmin ? 'Admin' : 'Customer'}
-                    </span>
-                  </div>
-                </div>
-                <Link
-                  href={user.isAdmin ? '/admin' : '/dashboard'}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-zinc-300 hover:text-white hover:bg-white/5 transition"
-                >
-                  <User className="h-3.5 w-3.5 text-indigo-400" />
-                  Dashboard
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-red-400 hover:bg-red-500/5 hover:text-red-300 transition text-left"
-                >
-                  <LogOut className="h-3.5 w-3.5" />
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-zinc-300 hover:bg-white/5 hover:text-white transition"
-                >
-                  <User className="h-4 w-4" />
-                  Sign In
-                </Link>
-                <Link
-                  href="/register"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full text-center py-2 bg-indigo-650 hover:bg-indigo-550 text-white rounded-lg text-xs font-bold uppercase tracking-wider transition"
-                >
-                  Create Account
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-      )}
+                  <Link
+                    href={user.isAdmin ? '/admin' : '/dashboard'}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-zinc-300 hover:text-white hover:bg-white/5 transition"
+                  >
+                    <User className="h-3.5 w-3.5 text-indigo-400" />
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-red-400 hover:bg-red-500/5 hover:text-red-300 transition text-left"
+                  >
+                    <LogOut className="h-3.5 w-3.5" />
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold uppercase tracking-wider text-zinc-300 hover:bg-white/5 hover:text-white transition"
+                  >
+                    <User className="h-4 w-4" />
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="w-full text-center py-2 bg-indigo-650 hover:bg-indigo-550 text-white rounded-lg text-xs font-bold uppercase tracking-wider transition"
+                  >
+                    Create Account
+                  </Link>
+                </>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   )
 }
