@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { ArrowRight, AlertTriangle, DollarSign, PackageCheck, Loader2 } from 'lucide-react'
 import Link from 'next/link'
-import axios from 'axios'
+import { fetchRoiStats } from '@/services/adminApi'
 import { formatCurrency } from '@/lib/utils'
 
 export default function AdminPage() {
@@ -15,16 +15,10 @@ export default function AdminPage() {
     const getStats = async () => {
       try {
         setLoading(true)
-        const token = typeof window !== 'undefined' ? localStorage.getItem('atoz_jwt_token') : null
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+        const res = await fetchRoiStats()
         
-        const response = await axios.get(`${apiUrl}/admin/dashboard/roi`, {
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-          withCredentials: true,
-        })
-        
-        if (response.data && response.data.success) {
-          const { cashSaved, criticalActionCount, alerts } = response.data.data
+        if (res && res.success) {
+          const { cashSaved, criticalActionCount, alerts } = res.data
           setStats({
             cashSaved,
             criticalActionRequired: criticalActionCount,
@@ -32,7 +26,7 @@ export default function AdminPage() {
           })
           setError(null)
         } else {
-          throw new Error(response.data?.error || 'Failed to fetch dashboard ROI stats')
+          throw new Error(res?.error || 'Failed to fetch dashboard ROI stats')
         }
       } catch (err: any) {
         console.error('Stats loading error:', err)

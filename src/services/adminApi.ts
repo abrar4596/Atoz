@@ -53,5 +53,13 @@ export async function updateAdminOrderStatus(id: string, status: string) {
   return response.data
 }
 
+export async function fetchRoiStats() {
+  const response = await apiClient.get('/admin/dashboard/roi', {
+    withCredentials: true
+  })
+  return response.data
+}
+
+
 
 
