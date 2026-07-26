@@ -29,8 +29,8 @@ export default function AdminPage() {
           throw new Error(res?.error || 'Failed to fetch dashboard ROI stats')
         }
       } catch (err: any) {
-        console.error('Stats loading error:', err)
-        setError('Failed to load live data')
+        console.error("Dashboard Fetch Error:", err.response?.status, err.response?.data || err.message);
+        setError(err.response?.data?.error || err.message || 'Failed to load live data')
       } finally {
         setLoading(false)
       }

@@ -23,8 +23,8 @@ export default function InventoryPage() {
           throw new Error(res?.error || 'Failed to fetch inventory alerts')
         }
       } catch (err: any) {
-        console.error('Alerts load error:', err)
-        setError('Failed to load live data')
+        console.error("Dashboard Fetch Error:", err.response?.status, err.response?.data || err.message);
+        setError(err.response?.data?.error || err.message || 'Failed to load live data')
       } finally {
         setLoading(false)
       }
