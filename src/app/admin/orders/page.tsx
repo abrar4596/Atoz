@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { CheckCircle2, AlertCircle, X, PackageCheck } from 'lucide-react'
-import { fetchAdminOrders, updateAdminOrderStatus } from '@/services/adminApi'
+import { CheckCircle2, AlertCircle, X, PackageCheck, Trash2 } from 'lucide-react'
+import { fetchAdminOrders, updateAdminOrderStatus, deleteAdminOrder } from '@/services/adminApi'
 import { formatCurrency } from '@/lib/utils'
 
 interface UserProfile {
@@ -39,6 +39,7 @@ export default function AdminOrdersPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [toast, setToast] = useState<ToastMessage | null>(null)
+  const [orderToDelete, setOrderToDelete] = useState<string | null>(null)
 
   useEffect(() => {
     const getOrders = async () => {
@@ -89,6 +90,25 @@ export default function AdminOrdersPage() {
     }
   }
 
+  const handleDeleteOrder = async () => {
+    if (!orderToDelete) return
+    const id = orderToDelete
+    try {
+      const res = await deleteAdminOrder(id)
+      if (res.success) {
+        setOrders((prev) => prev.filter((o) => o._id !== id))
+        showToast('Order deleted successfully', 'success')
+      } else {
+        throw new Error(res.error || 'Failed to delete order')
+      }
+    } catch (err: any) {
+      console.error('Failed deleting order:', err)
+      showToast(err.message || 'Failed to delete order', 'error')
+    } finally {
+      setOrderToDelete(null)
+    }
+  }
+
   const getOptions = (currentStatus: string) => {
     const base = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled']
     if (!base.includes(currentStatus)) {
@@ -106,7 +126,8 @@ export default function AdminOrdersPage() {
         <div className="rounded-3xl bg-white p-6 border border-zinc-200 space-y-4">
           <div className="h-8 bg-zinc-100 rounded-xl w-1/4 mb-6"></div>
           <div className="space-y-3">
-            <div className="grid grid-cols-5 gap-4 py-2 border-b border-zinc-100">
+            <div className="grid grid-cols-6 gap-4 py-2 border-b border-zinc-100">
+              <div className="h-4 bg-zinc-200 rounded"></div>
               <div className="h-4 bg-zinc-200 rounded"></div>
               <div className="h-4 bg-zinc-200 rounded"></div>
               <div className="h-4 bg-zinc-200 rounded"></div>
@@ -114,7 +135,8 @@ export default function AdminOrdersPage() {
               <div className="h-4 bg-zinc-200 rounded"></div>
             </div>
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="grid grid-cols-5 gap-4 py-3 border-b border-zinc-100">
+              <div key={i} className="grid grid-cols-6 gap-4 py-3 border-b border-zinc-100">
+                <div className="h-4 bg-zinc-100 rounded"></div>
                 <div className="h-4 bg-zinc-100 rounded"></div>
                 <div className="h-4 bg-zinc-100 rounded"></div>
                 <div className="h-4 bg-zinc-100 rounded"></div>
@@ -185,6 +207,7 @@ export default function AdminOrdersPage() {
                   <th className="px-4 py-3 font-medium">Total Amount</th>
                   <th className="px-4 py-3 font-medium">Status</th>
                   <th className="px-4 py-3 font-medium">Date</th>
+                  <th className="px-4 py-3 font-medium text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -228,6 +251,15 @@ export default function AdminOrdersPage() {
                         </select>
                       </td>
                       <td className="px-4 py-3 text-xs text-zinc-500">{new Date(order.createdAt).toLocaleDateString()}</td>
+                      <td className="px-4 py-3 text-right">
+                        <button
+                          onClick={() => setOrderToDelete(order._id)}
+                          className="rounded-xl p-2 text-zinc-400 hover:text-rose-600 hover:bg-rose-50 transition inline-flex items-center justify-center cursor-pointer"
+                          title="Delete Order"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </td>
                     </tr>
                   )
                 })}
@@ -236,6 +268,32 @@ export default function AdminOrdersPage() {
           </div>
         )}
       </div>
+
+      {/* Safety Deletion Confirmation Modal */}
+      {orderToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/45 backdrop-blur-xs transition-all duration-300 animate-in fade-in-30">
+          <div className="w-full max-w-md bg-white border border-zinc-200 rounded-3xl p-6 shadow-2xl animate-in zoom-in-95 duration-200">
+            <h3 className="text-lg font-semibold text-zinc-950">Permanently Delete Order?</h3>
+            <p className="mt-3 text-sm text-zinc-500 leading-relaxed">
+              Are you sure you want to permanently delete this order? This action cannot be undone and will remove the record from the database.
+            </p>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => setOrderToDelete(null)}
+                className="rounded-2xl border border-zinc-250 bg-white px-4 py-2 text-sm font-semibold text-zinc-700 hover:bg-zinc-50 transition cursor-pointer animate-none"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteOrder}
+                className="rounded-2xl bg-rose-600 px-4 py-2 text-sm font-bold text-white hover:bg-rose-700 transition cursor-pointer"
+              >
+                Confirm Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

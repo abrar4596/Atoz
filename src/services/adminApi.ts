@@ -60,6 +60,11 @@ export async function fetchRoiStats() {
   return response.data
 }
 
+export async function deleteAdminOrder(id: string) {
+  const response = await apiClient.delete(`/admin/orders/${id}`)
+  return response.data
+}
+
 
 
 
