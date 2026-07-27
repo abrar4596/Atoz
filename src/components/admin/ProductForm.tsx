@@ -79,8 +79,14 @@ export default function ProductForm({
           setError('Failed to fetch distributor list. Check server status.')
         }
       } catch (err: any) {
-        console.error('Error fetching distributors:', err)
-        setError('Error connecting to backend to fetch distributors.')
+        const errorMsg = err.response?.data?.error || err.message || String(err)
+        console.error('Error fetching distributors:', {
+          message: err.message,
+          response: err.response?.data,
+          status: err.response?.status,
+          error: err
+        })
+        setError(`Error connecting to backend to fetch distributors: ${errorMsg}`)
       } finally {
         setLoadingDistributors(false)
       }
